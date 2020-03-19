@@ -42,7 +42,9 @@ module EmberCli
     def build_errors
       error_lines.
         reject { |line| is_blank_or_backtrace?(line) }.
-        reject { |line| is_deprecation_warning?(line) }
+        reject { |line| is_deprecation_warning?(line) }.
+        reject { |line| is_building_notice?(line) }.
+        reject { |line| is_browserslist_warning?(line) }
     end
 
     def has_build_errors?
@@ -55,6 +57,14 @@ module EmberCli
 
     def is_deprecation_warning?(line)
       line =~ /^(\e[^\s]+)?DEPRECATION:/
+    end
+
+    def is_building_notice?(line)
+      line =~ /^(\e[^\s]+)?.\s(\e[^\s]+)?Building/
+    end
+
+    def is_browserslist_warning?(line)
+      line =~ /^Browserslist:/
     end
 
     def error_lines
